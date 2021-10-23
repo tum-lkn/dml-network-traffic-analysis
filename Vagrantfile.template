@@ -1,0 +1,36 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
+
+CPU = 8
+MEMORY = 49152
+
+Vagrant.configure("2") do |config|
+
+	config.vm.box = "measurements/ubuntu1804"
+
+	config.vm.define "hostname_here"
+	config.vm.hostname = "hostname_here"
+	config.vm.network "forwarded_port", guest: 22, host: 1701, protocol: "tcp", host_ip: "0.0.0.0"
+
+	config.ssh.username = "vagrant"
+	config.ssh.password = "vagrant"
+
+	config.vm.synced_folder "datapath_here", "/home/vagrant/output", type: "nfs"
+	config.vm.synced_folder "/root/dependencies", "/home/vagrant/dependencies", type: "nfs"
+
+	config.vm.provider :libvirt do |v|
+
+		v.memory = MEMORY
+		v.cpus = CPU
+
+		# Passthrough enp94s0f0 device
+		v.pci :domain => '0x0000', :bus => '0x5e', :slot => '0x00', :function => '0x0'
+		v.pci :domain => '0x0000', :bus => '0x3b', :slot => '0x00', :function => '0x0'
+
+	end
+
+	config.vm.provision "file", source: "script.py", destination: "~/script.py", run: "always"
+
+end

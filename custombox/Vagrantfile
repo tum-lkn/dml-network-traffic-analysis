@@ -1,0 +1,28 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
+
+CPU = 8
+MEMORY = 49152
+
+Vagrant.configure("2") do |config|
+
+	config.vm.box = "generic/ubuntu1804"
+	config.vm.box_check_update = false
+	config.vm.synced_folder "/root/dependencies", "/home/vagrant/dependencies", type: "nfs"
+
+	config.vm.provider :libvirt do |v|
+
+		v.memory = MEMORY
+		v.cpus = CPU
+
+	end
+
+	config.vm.provision "file", source: "/root/.ssh/id_rsa.pub", destination: "~/host_public_key.pub"
+	config.vm.provision "file", source: "ssh_keys/vagrant-ml_id_rsa.key", destination: "~/vagrant-ml_id_rsa.key"
+    config.vm.provision "file", source: "ssh_keys/vagrant-ml_id_rsa.key.pub", destination: "~/vagrant-ml_id_rsa.key.pub"
+	config.vm.provision "shell", path: "custombox_ssh_install.sh", run: "always"
+	config.vm.provision "shell", path: "install_dependencies.sh", run: "always"
+
+end
