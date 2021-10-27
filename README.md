@@ -4,7 +4,7 @@ This repository includes the source code for the measurements and the analysis s
 Characteristics of Machine Learning Frameworks Under the Microscope" by Johannes Zerwas, Kaan Aykurt, Stefan Schmid 
 and Andreas Blenk (2021).
 
-The collected traces are available [here](https://mediatum.ub.tum.de/1632489).
+The collected traces are available [here](https://doi.org/10.14459/2021mp1632489).
 
 Folders:
 - `analysis/`: parsing, aggregation and evaluation scripts
